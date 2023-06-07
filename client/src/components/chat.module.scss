@@ -1,0 +1,19 @@
+.chatBox {
+    width: 500px;
+}
+
+.chatBody {
+    height: 500px;
+    overflow: auto;
+}
+
+.head {
+    text-align: center;
+    background-color: #c5c6c6;
+}
+
+.mySend {
+    text-align: right;
+    display: inline-block;
+    background-color: aqua;
+}
