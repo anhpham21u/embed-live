@@ -1,17 +1,32 @@
 import styles from "./../components/chat.module.scss";
 import { Container, InputGroup, Button, Form } from "react-bootstrap";
 import { useEffect, useState, useRef } from "react";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:5000");
 
 function Chat() {
   const [chatLog, setChatLog] = useState([]);
   const btnSend = useRef(null);
   const input = useRef(null);
 
+  socket.on("render", (messages) => {
+    setChatLog(messages);
+  });
+
   useEffect(() => {
     const handleSend = () => {
       const newChatLog = [...chatLog, input.current.value];
       setChatLog(newChatLog);
       input.current.value = "";
+
+      console.log(newChatLog);
+
+      const messages = {
+        content: newChatLog,
+      };
+
+      socket.emit("messages", messages);
     };
 
     btnSend.current.addEventListener("click", handleSend);
