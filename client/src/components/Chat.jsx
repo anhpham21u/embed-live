@@ -10,9 +10,12 @@ function Chat() {
   const btnSend = useRef(null);
   const input = useRef(null);
 
-  socket.on("render", (messages) => {
-    setChatLog(messages);
-  });
+  useEffect(() => {
+    socket.emit("render");
+    socket.on("render", (messages) => {
+      setChatLog(messages);
+    });
+  }, []);
 
   useEffect(() => {
     const handleSend = () => {
@@ -20,7 +23,7 @@ function Chat() {
       setChatLog(newChatLog);
       input.current.value = "";
 
-      console.log(newChatLog);
+      // console.log(newChatLog);
 
       const messages = {
         content: newChatLog,
@@ -32,7 +35,8 @@ function Chat() {
     btnSend.current.addEventListener("click", handleSend);
 
     return () => {
-      btnSend.current.removeEventListener("click", handleSend);
+      if (btnSend.current)
+        btnSend.current.removeEventListener("click", handleSend);
     };
   });
 
@@ -43,7 +47,7 @@ function Chat() {
 
         <div className={styles.chatBody + " p-3"}>
           {chatLog.map((data, idx) => (
-            <div className="d-flex justify-content-end">
+            <div className="">
               <p key={idx} className={styles.mySend + " p-2"}>
                 {data}
               </p>
