@@ -1,8 +1,16 @@
 import MyNav from "../components/MyNav";
 import { Form, Container, Button } from "react-bootstrap";
 import styles from "./login.module.scss";
+import { useRef } from "react";
 
 function Register() {
+  const inputEmail = useRef(null);
+  const inputPass = useRef(null);
+
+  const handleRegister = () => {
+    console.log(inputEmail.current.value, inputPass.current.value);
+  };
+
   return (
     <div>
       <MyNav />
@@ -15,6 +23,7 @@ function Register() {
               type="email"
               placeholder="Enter email"
               className={styles.input}
+              ref={inputEmail}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupPassword">
@@ -23,9 +32,10 @@ function Register() {
               type="password"
               placeholder="Password"
               className={styles.input}
+              ref={inputPass}
             />
           </Form.Group>
-          <Button variant="primary" type="submit">
+          <Button variant="primary" onClick={handleRegister}>
             Sign up
           </Button>
         </Form>
