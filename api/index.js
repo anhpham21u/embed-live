@@ -2,15 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const socketHandler = require("./socket.js");
 const authRoute = require("./routes/auth.js");
-// const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const http = require("http").Server(app);
 
 const mongoose = require("mongoose");
-const { constrainedMemory } = require("process");
 
 // connnect to mongodb
 async function connect() {
@@ -28,13 +27,7 @@ async function connect() {
 // solve socket io
 socketHandler(http);
 
-// const apiProxy = createProxyMiddleware("/api", {
-//   target: "http://localhost:3000", // Địa chỉ của máy chủ thật
-//   changeOrigin: true,
-// });
-
 // middlewares
-// app.use("/api", apiProxy);
 app.use("/api/auth", authRoute);
 
 app.use((err, req, res, next) => {
@@ -48,10 +41,6 @@ app.use((err, req, res, next) => {
     stack: err.stack,
   });
 });
-
-// app.listen(8000, () => {
-//   console.log("Listen port 8000");
-// });
 
 http.listen(5000, () => {
   connect();

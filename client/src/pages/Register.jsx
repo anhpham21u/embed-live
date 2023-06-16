@@ -7,8 +7,26 @@ function Register() {
   const inputEmail = useRef(null);
   const inputPass = useRef(null);
 
-  const handleRegister = () => {
-    console.log(inputEmail.current.value, inputPass.current.value);
+  const handleRegister = async () => {
+    const data = {
+      email: inputEmail.current.value,
+      password: inputPass.current.value,
+    };
+
+    const response = await fetch("http://localhost:5000/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
+    }
+
+    const responseData = await response.json();
+    console.log(responseData); // Hiển thị phản hồi từ máy chủ
   };
 
   return (

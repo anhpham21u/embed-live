@@ -48,7 +48,7 @@ function Login() {
               ref={inputPass}
             />
           </Form.Group>
-          <Button variant="primary" type="submit" onCLick={handleLogin}>
+          <Button variant="primary" type="submit" onClick={handleLogin}>
             Log in
           </Button>
           <Button
