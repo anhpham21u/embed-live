@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const socketHandler = require("./socket.js");
 const authRoute = require("./routes/auth.js");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
@@ -14,9 +15,7 @@ const mongoose = require("mongoose");
 // connnect to mongodb
 async function connect() {
   try {
-    await mongoose.connect(
-      "mongodb+srv://anhpham:anhphamliveapp@live-app.8nac9go.mongodb.net/messages?retryWrites=true&w=majority"
-    );
+    await mongoose.connect(process.env.MONGODB);
 
     console.log("connected to mongoDB");
   } catch (error) {
