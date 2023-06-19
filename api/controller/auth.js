@@ -16,23 +16,24 @@ const register = async (req, res, next) => {
 
     res.status(200).json({ message: "Đăng ký thành công." });
   } catch (err) {
-    next(err);
+    next(createError(400, "User not found"));
   }
 };
 
 const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
-    if (!user) return next(createError(404, "User not found!"));
+
+    if (!user) return next(createError(404, "User not found"));
 
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
       user.password
     );
 
-    if (!isPasswordCorrect) return next(createError(400, "Wrong password!!!"));
+    if (!isPasswordCorrect) return next(createError(400, "Wrong password"));
 
-    res.status(200).send("User is logged!");
+    res.status(200).json({ message: "User is logged" });
   } catch (err) {
     next(err);
   }

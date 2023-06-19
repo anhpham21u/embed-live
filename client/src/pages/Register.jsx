@@ -1,11 +1,14 @@
 import MyNav from "../components/MyNav";
 import { Form, Container, Button } from "react-bootstrap";
 import styles from "./login.module.scss";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const navigate = useNavigate();
   const inputEmail = useRef(null);
   const inputPass = useRef(null);
+  const [err, setErr] = useState(false);
 
   const handleRegister = async () => {
     const data = {
@@ -22,11 +25,10 @@ function Register() {
     });
 
     if (!response.ok) {
-      throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
+      setErr(true);
+    } else {
+      navigate("/login");
     }
-
-    const responseData = await response.json();
-    console.log(responseData); // Hiển thị phản hồi từ máy chủ
   };
 
   return (
@@ -37,6 +39,11 @@ function Register() {
         <Form>
           <Form.Group className="mb-3" controlId="formGroupEmail">
             <Form.Label>Email address</Form.Label>
+            {err && (
+              <p className={styles.errName}>
+                Tên tài khoản đã có người sử dụng
+              </p>
+            )}
             <Form.Control
               type="email"
               placeholder="Enter email"

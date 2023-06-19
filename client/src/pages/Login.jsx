@@ -2,26 +2,33 @@ import MyNav from "../components/MyNav";
 import { Form, Container, Button } from "react-bootstrap";
 import styles from "./login.module.scss";
 import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 function Login() {
   const navigate = useNavigate();
   const inputEmail = useRef(null);
   const inputPass = useRef(null);
+  const [err, setErr] = useState(false);
 
-  const handleLogin = () => {
-    fetch("/api/auth/login", {
+  const handleLogin = async () => {
+    const data = {
+      email: inputEmail.current.value,
+      password: inputPass.current.value,
+    };
+
+    const response = await fetch("http://localhost:5000/api/auth/login", {
       method: "POST",
-      body: {
-        email: inputEmail.current,
-        password: inputPass.current,
+      headers: {
+        "Content-Type": "application/json",
       },
-    })
-      .then((res) => res.json)
-      .then((data) => {})
-      .catch((err) => {
-        console.error(err);
-      });
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      setErr(true);
+    } else {
+      navigate("/");
+    }
   };
 
   return (
@@ -29,6 +36,9 @@ function Login() {
       <MyNav />
 
       <Container className="mt-5 d-md-flex justify-content-center">
+        {err && (
+          <p className={styles.errName}>Sai tên tài khoản hoặc mật khẩu</p>
+        )}
         <Form>
           <Form.Group className="mb-3" controlId="formGroupEmail">
             <Form.Label>Email address</Form.Label>
@@ -48,7 +58,7 @@ function Login() {
               ref={inputPass}
             />
           </Form.Group>
-          <Button variant="primary" type="submit" onClick={handleLogin}>
+          <Button variant="primary" onClick={handleLogin}>
             Log in
           </Button>
           <Button
