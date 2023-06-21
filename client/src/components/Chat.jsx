@@ -12,22 +12,20 @@ function Chat() {
   const input = useRef(null);
   const { isLogged, setIsLogged } = useContext(loggedContext);
   const user = JSON.parse(localStorage.getItem("user"));
+  const chatBodyRef = useRef(null);
 
   useEffect(() => {
     socket.emit("render");
     socket.on("render", (messages) => {
       setChatLog(messages);
+
+      // solve scroll
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     });
   }, []);
 
   useEffect(() => {
     const handleSend = () => {
-      const newChatLog = [
-        ...chatLog,
-        { author: user.username, content: input.current.value },
-      ];
-      setChatLog(newChatLog);
-
       const messages = { author: user.username, content: input.current.value };
       input.current.value = "";
 
@@ -47,7 +45,7 @@ function Chat() {
       <div className={styles.chatBox + " bg-light"}>
         <h3 className={styles.head + " p-3"}>Chat Box</h3>
 
-        <div className={styles.chatBody + " p-3"}>
+        <div className={styles.chatBody + " p-3"} ref={chatBodyRef}>
           {chatLog.map((data, idx) => (
             <div key={idx}>
               <p className={styles.mySend + " p-2"}>

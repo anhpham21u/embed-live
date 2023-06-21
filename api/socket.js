@@ -16,11 +16,13 @@ function socketHandler(http) {
     });
 
     socket.on("messages", async (messages) => {
-      console.log("Message received:", messages);
-
-      // CREATE DATA
       const newMessages = new Messages(messages);
       await newMessages.save();
+    });
+
+    Messages.watch().on("change", async () => {
+      const data = await Messages.find();
+      socket.emit("render", data);
     });
 
     socket.on("disconnect", () => {
