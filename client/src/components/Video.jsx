@@ -8,9 +8,9 @@ function Video() {
         height="480"
         src="https://www.youtube.com/embed/xopvkx6CpNs"
         title="How to Embed a Video on a Website (Embed Your YouTube Videos!)"
-        frameborder="0"
+        frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
+        allowFullScreen
       ></iframe>
     </Container>
   );

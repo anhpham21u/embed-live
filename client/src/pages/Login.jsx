@@ -2,17 +2,23 @@ import MyNav from "../components/MyNav";
 import { Form, Container, Button } from "react-bootstrap";
 import styles from "./login.module.scss";
 import { useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
+import { loggedContext } from "./../App";
 
 function Login() {
   const navigate = useNavigate();
-  const inputEmail = useRef(null);
+  const inputName = useRef(null);
   const inputPass = useRef(null);
   const [err, setErr] = useState(false);
+  const { isLogged, setIsLogged } = useContext(loggedContext);
+
+  if (isLogged === true) {
+    navigate("/");
+  }
 
   const handleLogin = async () => {
     const data = {
-      email: inputEmail.current.value,
+      username: inputName.current.value,
       password: inputPass.current.value,
     };
 
@@ -28,8 +34,8 @@ function Login() {
       setErr(true);
     } else {
       const dataRes = await response.json();
-      console.log(dataRes.token);
-      localStorage.setItem("token", dataRes.token);
+      localStorage.setItem("user", JSON.stringify(dataRes.userData));
+      setIsLogged(true);
       navigate("/");
     }
   };
@@ -43,13 +49,13 @@ function Login() {
           <p className={styles.errName}>Sai tên tài khoản hoặc mật khẩu</p>
         )}
         <Form>
-          <Form.Group className="mb-3" controlId="formGroupEmail">
-            <Form.Label>Email address</Form.Label>
+          <Form.Group className="mb-3">
+            <Form.Label>User name</Form.Label>
             <Form.Control
-              type="email"
-              placeholder="Enter email"
+              type="text"
+              placeholder="Enter username"
               className={styles.input}
-              ref={inputEmail}
+              ref={inputName}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="formGroupPassword">

@@ -8,10 +8,12 @@ function Register() {
   const navigate = useNavigate();
   const inputEmail = useRef(null);
   const inputPass = useRef(null);
+  const inputName = useRef(null);
   const [err, setErr] = useState(false);
 
   const handleRegister = async () => {
     const data = {
+      username: inputName.current.value,
       email: inputEmail.current.value,
       password: inputPass.current.value,
     };
@@ -37,13 +39,22 @@ function Register() {
 
       <Container className="mt-5 d-md-flex justify-content-center">
         <Form>
-          <Form.Group className="mb-3" controlId="formGroupEmail">
-            <Form.Label>Email address</Form.Label>
+          <Form.Group className="mb-3">
+            <Form.Label>User Name</Form.Label>
             {err && (
               <p className={styles.errName}>
                 Tên tài khoản đã có người sử dụng
               </p>
             )}
+            <Form.Control
+              type="text"
+              placeholder="User Name"
+              className={styles.input}
+              ref={inputName}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formGroupEmail">
+            <Form.Label>Email address</Form.Label>
             <Form.Control
               type="email"
               placeholder="Enter email"
@@ -60,6 +71,7 @@ function Register() {
               ref={inputPass}
             />
           </Form.Group>
+
           <Button variant="primary" onClick={handleRegister}>
             Sign up
           </Button>

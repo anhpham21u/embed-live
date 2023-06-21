@@ -43,5 +43,5 @@ app.use((err, req, res, next) => {
 
 http.listen(5000, () => {
   connect();
-  console.log(`Example app listening on port 5000`);
+  console.log(`App listening on port 5000`);
 });

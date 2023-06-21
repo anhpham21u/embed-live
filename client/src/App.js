@@ -6,12 +6,22 @@ import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 
 export const loggedContext = createContext();
 
 function App() {
   const [isLogged, setIsLogged] = useState(false);
+
+  useEffect(() => {
+    // check logged
+    const dataLogin = localStorage.getItem("user");
+    if (dataLogin) {
+      setIsLogged(true);
+    } else {
+      setIsLogged(false);
+    }
+  }, []);
 
   return (
     <loggedContext.Provider value={{ isLogged, setIsLogged }}>

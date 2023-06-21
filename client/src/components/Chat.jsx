@@ -1,7 +1,8 @@
 import styles from "./../components/chat.module.scss";
 import { Container, InputGroup, Button, Form } from "react-bootstrap";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import io from "socket.io-client";
+import { loggedContext } from "./../App";
 
 const socket = io("http://localhost:5000");
 
@@ -9,6 +10,8 @@ function Chat() {
   const [chatLog, setChatLog] = useState([]);
   const btnSend = useRef(null);
   const input = useRef(null);
+  const { isLogged, setIsLogged } = useContext(loggedContext);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     socket.emit("render");
@@ -19,15 +22,14 @@ function Chat() {
 
   useEffect(() => {
     const handleSend = () => {
-      const newChatLog = [...chatLog, input.current.value];
+      const newChatLog = [
+        ...chatLog,
+        { author: user.username, content: input.current.value },
+      ];
       setChatLog(newChatLog);
+
+      const messages = { author: user.username, content: input.current.value };
       input.current.value = "";
-
-      // console.log(newChatLog);
-
-      const messages = {
-        content: newChatLog,
-      };
 
       socket.emit("messages", messages);
     };
@@ -47,29 +49,53 @@ function Chat() {
 
         <div className={styles.chatBody + " p-3"}>
           {chatLog.map((data, idx) => (
-            <div className="">
-              <p key={idx} className={styles.mySend + " p-2"}>
-                {data}
+            <div key={idx}>
+              <p className={styles.mySend + " p-2"}>
+                <span className={styles.author}>{data.author}</span>{" "}
+                {data.content}
               </p>
             </div>
           ))}
         </div>
 
         <InputGroup className="mb-3 ">
-          <Form.Control
-            placeholder="Write some here"
-            aria-label="Recipient's username"
-            aria-describedby="basic-addon2"
-            ref={input}
-          />
-          <Button
-            variant="secondary"
-            id="button-addon2"
-            size="lg"
-            ref={btnSend}
-          >
-            Gửi
-          </Button>
+          {isLogged ? (
+            <>
+              <Form.Control
+                placeholder="Write some here"
+                aria-label="Recipient's username"
+                aria-describedby="basic-addon2"
+                ref={input}
+              />
+              <Button
+                variant="secondary"
+                id="button-addon2"
+                size="lg"
+                ref={btnSend}
+              >
+                Gửi
+              </Button>
+            </>
+          ) : (
+            <>
+              <Form.Control
+                placeholder="Vui lòng đăng nhập"
+                aria-label="Recipient's username"
+                aria-describedby="basic-addon2"
+                ref={input}
+                disabled
+              />
+              <Button
+                variant="secondary"
+                id="button-addon2"
+                size="lg"
+                ref={btnSend}
+                disabled
+              >
+                Gửi
+              </Button>
+            </>
+          )}
         </InputGroup>
       </div>
     </Container>
