@@ -2,7 +2,7 @@ import MyNav from "../components/MyNav";
 import { Form, Container, Button } from "react-bootstrap";
 import styles from "./login.module.scss";
 import { useNavigate } from "react-router-dom";
-import { useRef, useState, useContext } from "react";
+import { useRef, useState, useContext, useEffect } from "react";
 import { loggedContext } from "./../App";
 
 function Login() {
@@ -12,9 +12,11 @@ function Login() {
   const [err, setErr] = useState(false);
   const { isLogged, setIsLogged } = useContext(loggedContext);
 
-  if (isLogged === true) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (isLogged === true) {
+      navigate("/");
+    }
+  });
 
   const handleLogin = async () => {
     const data = {
@@ -36,7 +38,6 @@ function Login() {
       const dataRes = await response.json();
       localStorage.setItem("user", JSON.stringify(dataRes.userData));
       setIsLogged(true);
-      navigate("/");
     }
   };
 

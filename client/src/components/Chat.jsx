@@ -18,9 +18,6 @@ function Chat() {
     socket.emit("render");
     socket.on("render", (messages) => {
       setChatLog(messages);
-
-      // solve scroll
-      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     });
   }, []);
 
@@ -33,6 +30,9 @@ function Chat() {
     };
 
     btnSend.current.addEventListener("click", handleSend);
+
+    // solve scroll
+    chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
 
     return () => {
       if (btnSend.current)
